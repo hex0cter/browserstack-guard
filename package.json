@@ -1,0 +1,22 @@
+{
+  "name": "browserstack-guard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "blaba"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hex0cter/browserstack-guard.git"
+  },
+  "keywords": [
+    "browserstack"
+  ],
+  "author": "Daniel Han",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hex0cter/browserstack-guard/issues"
+  },
+  "homepage": "https://github.com/hex0cter/browserstack-guard#readme"
+}
