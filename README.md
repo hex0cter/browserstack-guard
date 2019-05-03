@@ -2,7 +2,7 @@
 A cli command checking the available executors on your browserstack subscription.
 
 ## Background
-Browserstack supports limited number of queued tasks. If you run a test when the queue is already full, the test will fail. This command help you check if it is possible to run a new test. If you have reached the upper limit of allowed parallel tests, the command will wait until an executor becomes available.
+Browserstack supports limited number of queued tasks. If you run a test when the queue is already full, the test will fail. This command helps you check if it is possible to run a new test. If you have reached the upper limit of allowed parallel tests, the command will wait until an executor becomes available.
 
 ## Install
 Just install the package as a global package on your system
@@ -19,3 +19,4 @@ or
 ```
 BROWSERSTACK_USERNAME=<user name> BROWSERSTACK_ACCESS_KEY=<access key> browserstack-guard
 ```
+This could be very handy to run before you start any automated test in the build pipeline.
