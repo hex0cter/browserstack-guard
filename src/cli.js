@@ -20,4 +20,13 @@ const args = yargs.option('username', {
   })
   .argv
 
+if (args.username === '') {
+  console.log('Missing user name. Please export BROWSERSTACK_USERNAME or run the command with `--username <username>`')
+  process.exit(1)
+}
+if (args.accesskey === '') {
+  console.log('Missing access key. Please export BROWSERSTACK_ACCESS_KEY or run the command with `--accesskey <accesskey>`')
+  process.exit(1)
+}
+
 browserstackGuard(args.username, args.accesskey, args.limit)

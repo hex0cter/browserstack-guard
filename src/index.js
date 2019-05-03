@@ -12,7 +12,7 @@ class Browserstack {
     return resp.data
   }
   async waitUntilBelowLimit(limit) {
-    process.stdout.write('Checking available executor on Browserstack...')
+    process.stdout.write('Checking available executors on Browserstack...')
     while(true) {
       const runningWorkers = await this.getWorkers()
       const numberOfRunningWorkers = runningWorkers.filter(worker => worker.status === 'running').length
