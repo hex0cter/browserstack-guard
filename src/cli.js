@@ -3,7 +3,8 @@
 const yargs = require('yargs')
 const browserstackGuard = require('./')
 
-const args = yargs.option('username', {
+const args = yargs
+  .option('username', {
     alias: 'u',
     default: process.env.BROWSERSTACK_USERNAME || '',
     description: 'User name of your browserstack account'
@@ -18,6 +19,10 @@ const args = yargs.option('username', {
     default: 5,
     description: 'Number of parallel tests allowed in browerstack'
   })
+  .option('verbose', {
+    alias: 'v',
+    description: 'Verbose mode'
+  })
   .argv
 
 if (args.username === '') {
@@ -29,4 +34,4 @@ if (args.accesskey === '') {
   process.exit(1)
 }
 
-browserstackGuard(args.username, args.accesskey, args.limit)
+browserstackGuard(args.username, args.accesskey, args.limit, args.verbose)
