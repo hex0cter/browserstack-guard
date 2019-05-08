@@ -1,3 +1,3 @@
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms)).catch((err) => {})
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 module.export = sleep

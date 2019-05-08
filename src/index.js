@@ -1,6 +1,7 @@
 import axios from 'axios'
 import sleep from './sleep'
 import logger from './logger'
+import { flatMap } from 'rxjs/operators';
 
 class Browserstack {
   constructor(userName, accessKey, verbose) {
@@ -16,17 +17,27 @@ class Browserstack {
     const resp = await axios.get('/automate/builds.json?status=running&limit=100')
     return resp.data
   }
+  async getRunningSessions(buildId) {
+    const resp = await axios.get(`/automate/builds/${buildId}/sessions.json?status=running&limit=100`)
+    return resp.data
+  }
   async waitUntilBelowLimit(limit) {
-    process.stdout.write('Checking available executors on Browserstack...')
-    while(true) {
+    logger.info('Checking available executors on Browserstack...')
+    while (true) {
       const runningWorkers = await this.getRunningWorkers()
       logger.debug(`${runningWorkers.length} running workers:`, runningWorkers)
 
-      const runningBuilds = await this.getRunningBuilds()
-      logger.debug(`${runningBuilds.length} running builds:`, runningBuilds)
+      const runningBuildIds = (await this.getRunningBuilds()).map(build => build.automation_build.hashed_id)
+      logger.debug(`${runningBuildIds.length} running builds:`, runningBuildIds)
 
-      if ( runningWorkers.length < limit && runningBuilds.length < limit) {
-        console.log('done.')
+      const sessions = await Promise.all(runningBuildIds.map(buildId => {
+        return this.getRunningSessions(buildId)
+      }))
+      const runningSessionIds = [].concat(...sessions).map(session => session.automation_session)
+      logger.debug(`${runningSessionIds.length} running sessions:`, runningSessionIds)
+
+      if (runningWorkers.length < limit && runningSessionIds.length < limit) {
+        logger.info('Done.')
         break
       }
       process.stdout.write('.')
@@ -37,5 +48,5 @@ class Browserstack {
 
 module.exports = async (userName, accessKey, limit, verbose) => {
   const browserstackGuard = new Browserstack(userName, accessKey, verbose)
-  await browserstackGuard.waitUntilBelowLimit(limit)
+  await browserstackGuard.waitUntilBelowLimit(limit).catch(err => console.log(err));
 }
