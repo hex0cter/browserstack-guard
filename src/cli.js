@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs')
-const browserstackGuard = require('./')
+import yargs from 'yargs'
+import browserstackGuard from './index'
 
 const args = yargs
   .option('username', {

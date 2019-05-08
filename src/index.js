@@ -4,24 +4,24 @@ import logger from './logger'
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 class Browserstack {
-  constructor(userName, accessKey, verbose) {
+  constructor (userName, accessKey, verbose) {
     axios.defaults.baseURL = 'https://api.browserstack.com'
     axios.defaults.headers.common['Authorization'] = `Basic ${Buffer.from(`${userName}:${accessKey}`).toString('base64')}`
     logger.level = verbose ? 'debug' : 'info'
   }
-  async getRunningWorkers() {
+  async getRunningWorkers () {
     const resp = await axios.get('/5/workers?status=running&limit=100')
     return resp.data
   }
-  async getRunningBuilds() {
+  async getRunningBuilds () {
     const resp = await axios.get('/automate/builds.json?status=running&limit=100')
     return resp.data
   }
-  async getRunningSessions(buildId) {
+  async getRunningSessions (buildId) {
     const resp = await axios.get(`/automate/builds/${buildId}/sessions.json?status=running&limit=100`)
     return resp.data
   }
-  async waitUntilBelowLimit(limit) {
+  async waitUntilBelowLimit (limit) {
     logger.info('Checking available executors on Browserstack...')
     while (true) {
       const runningWorkers = await this.getRunningWorkers()
@@ -48,5 +48,5 @@ class Browserstack {
 
 module.exports = async (userName, accessKey, limit, verbose) => {
   const browserstackGuard = new Browserstack(userName, accessKey, verbose)
-  await browserstackGuard.waitUntilBelowLimit(limit).catch(err => console.log(err));
+  await browserstackGuard.waitUntilBelowLimit(limit).catch(err => console.log(err))
 }
