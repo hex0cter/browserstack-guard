@@ -1,7 +1,7 @@
 import axios from 'axios'
-import sleep from './sleep'
 import logger from './logger'
-import { flatMap } from 'rxjs/operators';
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 class Browserstack {
   constructor(userName, accessKey, verbose) {
@@ -37,7 +37,7 @@ class Browserstack {
       logger.debug(`${runningSessionIds.length} running sessions:`, runningSessionIds)
 
       if (runningWorkers.length < limit && runningSessionIds.length < limit) {
-        logger.info('Done.')
+        logger.info(`${runningSessionIds.length} running session(s) found.`)
         break
       }
       process.stdout.write('.')
