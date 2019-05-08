@@ -1,6 +1,6 @@
 {
   "name": "browserstack-guard",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Check the queue status of Browerstack and wait until an executor is available.",
   "main": "lib/index.js",
   "bin": "bin/browserstack-guard.js",
