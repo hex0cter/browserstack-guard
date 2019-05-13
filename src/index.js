@@ -7,46 +7,55 @@ class Browserstack {
   constructor (userName, accessKey, verbose) {
     axios.defaults.baseURL = 'https://api.browserstack.com'
     axios.defaults.headers.common['Authorization'] = `Basic ${Buffer.from(`${userName}:${accessKey}`).toString('base64')}`
+    this.limit = 0
     logger.level = verbose ? 'debug' : 'info'
   }
-  async getRunningWorkers () {
-    const resp = await axios.get('/5/workers?status=running&limit=100')
-    return resp.data
+  async hasAvailableThreads () {
+    const sessionsInfo = (await axios.get('automate/plan.json')).data
+    this.limit = sessionsInfo.parallel_sessions_max_allowed
+    logger.debug('Running threads:', sessionsInfo)
+    return sessionsInfo.parallel_sessions_running < this.limit && sessionsInfo.queued_sessions === 0
   }
-  async getRunningBuilds () {
-    const resp = await axios.get('/automate/builds.json?status=running&limit=100')
-    return resp.data
+  async hasAvailableWorkers () {
+    const runningWorkers = (await axios.get('/5/workers?status=running&limit=100')).data
+    logger.debug(`${runningWorkers.length} running workers:`, runningWorkers)
+
+    return runningWorkers.length < this.limit
   }
-  async getRunningSessions (buildId) {
-    const resp = await axios.get(`/automate/builds/${buildId}/sessions.json?status=running&limit=100`)
-    return resp.data
+  async isReady () {
+    const hasAvailableThreads = await this.hasAvailableThreads()
+    if (!hasAvailableThreads) {
+      return false
+    }
+
+    const hasAvailableWorkers = await this.hasAvailableWorkers()
+    if (!hasAvailableWorkers) {
+      return false
+    }
+
+    return true
   }
-  async waitUntilBelowLimit (limit) {
+  async waitUntilReady () {
     logger.info('Checking available executors on Browserstack...')
     while (true) {
-      const runningWorkers = await this.getRunningWorkers()
-      logger.debug(`${runningWorkers.length} running workers:`, runningWorkers)
+      let ready = false
+      try {
+        ready = await this.isReady()
+      } catch (e) {
+        logger.error(e)
+      }
 
-      const runningBuildIds = (await this.getRunningBuilds()).map(build => build.automation_build.hashed_id)
-      logger.debug(`${runningBuildIds.length} running builds:`, runningBuildIds)
-
-      const sessions = await Promise.all(runningBuildIds.map(buildId => {
-        return this.getRunningSessions(buildId)
-      }))
-      const runningSessionIds = [].concat(...sessions).map(session => session.automation_session)
-      logger.debug(`${runningSessionIds.length} running sessions:`, runningSessionIds)
-
-      if (runningWorkers.length < limit && runningSessionIds.length < limit) {
-        logger.info(`${runningSessionIds.length} running session(s) found.`)
+      if (ready) {
+        logger.info('...done')
         break
       }
       process.stdout.write('.')
-      await sleep(30000)
+      await sleep(15000)
     }
   }
 }
 
-module.exports = async (userName, accessKey, limit, verbose) => {
+module.exports = async (userName, accessKey, verbose) => {
   const browserstackGuard = new Browserstack(userName, accessKey, verbose)
-  await browserstackGuard.waitUntilBelowLimit(limit).catch(err => console.log(err))
+  await browserstackGuard.waitUntilReady().catch(err => console.log(err))
 }
