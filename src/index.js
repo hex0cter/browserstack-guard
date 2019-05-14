@@ -12,8 +12,9 @@ class Browserstack {
   }
   async hasAvailableThreads () {
     const sessionsInfo = (await axios.get('automate/plan.json')).data
-    this.limit = sessionsInfo.parallel_sessions_max_allowed
     logger.debug('Running threads:', sessionsInfo)
+
+    this.limit = sessionsInfo.parallel_sessions_max_allowed
     return sessionsInfo.parallel_sessions_running < this.limit && sessionsInfo.queued_sessions === 0
   }
   async hasAvailableWorkers () {
@@ -30,6 +31,12 @@ class Browserstack {
 
     const hasAvailableWorkers = await this.hasAvailableWorkers()
     if (!hasAvailableWorkers) {
+      return false
+    }
+
+    await sleep(3000)
+    const stillHasAvailableThreads = await this.hasAvailableThreads()
+    if (!stillHasAvailableThreads) {
       return false
     }
 
@@ -50,7 +57,8 @@ class Browserstack {
         break
       }
       process.stdout.write('.')
-      await sleep(15000)
+      const seconds = Math.floor((Math.random() * 15) + 10)
+      await sleep(seconds * 1000)
     }
   }
 }
