@@ -5,4 +5,4 @@ install:
     - yarn install
     - yarn build
     - yarn run login
-    - npm publish
+    - npm publish || true
