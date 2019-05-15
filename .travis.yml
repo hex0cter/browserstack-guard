@@ -4,5 +4,4 @@ node_js:
 install:
     - yarn install
     - yarn build
-    - yarn run login
-    - npm publish || true
+    - yarn run login && npm publish || true

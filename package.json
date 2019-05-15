@@ -12,6 +12,7 @@
   "scripts": {
     "login": "npm-cli-adduser --username ${NPM_USER} --password \"${NPM_PASS}\" --email ${NPM_EMAIL}",
     "build": "rm -rf lib && babel src --out-dir lib",
+    "test" : "echo none",
     "lint": "eslint ."
   },
   "repository": {
