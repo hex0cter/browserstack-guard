@@ -10,6 +10,7 @@
     "lib"
   ],
   "scripts": {
+    "login": "npm-cli-adduser --username ${NPM_USER} --password ${NPM_PASS} --email ${NPM_EMAIL}",
     "build": "rm -rf lib && babel src --out-dir lib",
     "lint": "eslint ."
   },
@@ -35,6 +36,7 @@
     "eslint-plugin-node": "^9.0.1",
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-standard": "^4.0.0",
+    "npm-cli-adduser": "^1.1.4",
     "standard": "^12.0.1"
   },
   "dependencies": {
