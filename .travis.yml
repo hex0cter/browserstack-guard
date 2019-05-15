@@ -3,5 +3,4 @@ node_js:
   - "10"
 install:
     - npm run build
-deploy:
     - npm publish
