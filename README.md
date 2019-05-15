@@ -1,4 +1,6 @@
 # Browserstack guard
+[![npm version](https://badge.fury.io/js/browserstack-guard.svg)](https://badge.fury.io/js/browserstack-guard) [![Build Status](https://travis-ci.org/hex0cter/browserstack-guard.svg?branch=master)](https://travis-ci.org/hex0cter/browserstack-guard)
+
 A cli command checking the available executors on your browserstack subscription.
 
 ## Background
