@@ -11,7 +11,7 @@ class Browserstack {
     logger.level = verbose ? 'debug' : 'info'
   }
   async hasAvailableThreads () {
-    const sessionsInfo = (await axios.get('automate/plan.json')).data
+    const sessionsInfo = (await axios.get('/automate/plan.json')).data
     logger.debug('Running threads:', sessionsInfo)
 
     this.limit = sessionsInfo.parallel_sessions_max_allowed
@@ -34,30 +34,26 @@ class Browserstack {
       return false
     }
 
-    await sleep(3000)
-    const stillHasAvailableThreads = await this.hasAvailableThreads()
-    if (!stillHasAvailableThreads) {
-      return false
-    }
-
     return true
   }
   async waitUntilReady () {
     logger.info('Checking available executors on Browserstack...')
+    let readyCount = 0
+
     while (true) {
-      let ready = false
       try {
-        ready = await this.isReady()
+        readyCount = (await this.isReady()) ? readyCount + 1 : 0
       } catch (e) {
         logger.error(e)
       }
+      logger.debug('readyCount:', readyCount)
 
-      if (ready) {
+      if (readyCount >= 2) {
         logger.info('...done')
         break
       }
       process.stdout.write('.')
-      const seconds = Math.floor((Math.random() * 15) + 10)
+      const seconds = Math.floor((Math.random() * 10) + 10)
       await sleep(seconds * 1000)
     }
   }
