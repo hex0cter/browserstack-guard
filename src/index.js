@@ -48,7 +48,7 @@ class Browserstack {
       }
       logger.debug('readyCount:', readyCount)
 
-      if (readyCount >= 2) {
+      if (readyCount >= 3) {
         logger.info('...done')
         break
       }
