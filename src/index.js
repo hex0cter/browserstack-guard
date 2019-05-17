@@ -39,11 +39,15 @@ class Browserstack {
   async waitUntilReady () {
     logger.info('Checking available executors on Browserstack...')
     let readyCount = 0
+    let waitingFactor = 0
 
     while (true) {
       try {
         readyCount = (await this.isReady()) ? readyCount + 1 : 0
+        waitingFactor = 0
       } catch (e) {
+        readyCount = 0
+        waitingFactor += 2
         logger.error(e)
       }
       logger.debug('readyCount:', readyCount)
@@ -53,7 +57,8 @@ class Browserstack {
         break
       }
       process.stdout.write('.')
-      const seconds = Math.floor((Math.random() * 10) + 10)
+      const seconds = Math.floor(Math.random() * 10 + 10) + waitingFactor
+      logger.debug(`sleep for ${seconds} seconds...`)
       await sleep(seconds * 1000)
     }
   }
