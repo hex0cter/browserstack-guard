@@ -23,15 +23,5 @@ BROWSERSTACK_USERNAME=<user name> BROWSERSTACK_ACCESS_KEY=<access key> browserst
 ```
 This could be very handy to run before you start any automated test in the build pipeline.
 
-## How to build
-```
-yarn build
-```
-
-## How to publish
-```
-yarn publish
-```
-
 ## Contributing
 Pull requests are welcome for fixing issues or adding more features. Things that could be useful are unit tests and more safety nets for when something goes wrong.
