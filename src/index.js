@@ -47,7 +47,7 @@ class Browserstack {
         waitingFactor = 0
       } catch (e) {
         readyCount = 0
-        waitingFactor += 2
+        waitingFactor += 5
         logger.error(e)
       }
       logger.debug('readyCount:', readyCount)
@@ -57,7 +57,7 @@ class Browserstack {
         break
       }
       process.stdout.write('.')
-      const seconds = Math.floor(Math.random() * 10 + 10) + waitingFactor
+      const seconds = Math.floor(Math.random() * 20 + 10) + waitingFactor
       logger.debug(`sleep for ${seconds} seconds...`)
       await sleep(seconds * 1000)
     }
