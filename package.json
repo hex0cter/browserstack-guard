@@ -12,7 +12,7 @@
   "scripts": {
     "login": "npm-cli-adduser --username ${NPM_USER} --password \"${NPM_PASS}\" --email ${NPM_EMAIL}",
     "build": "rm -rf lib && babel src --out-dir lib",
-    "test" : "echo none",
+    "test": "echo none",
     "lint": "eslint ."
   },
   "repository": {
@@ -41,7 +41,7 @@
     "standard": "^12.0.1"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "log4js": "^4.1.1",
     "yargs": "^13.2.2"
   }
