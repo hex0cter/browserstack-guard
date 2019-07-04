@@ -15,7 +15,7 @@ class Browserstack {
     logger.debug('Running threads:', sessionsInfo)
 
     this.limit = sessionsInfo.parallel_sessions_max_allowed
-    return sessionsInfo.parallel_sessions_running < this.limit && sessionsInfo.queued_sessions === 0
+    return sessionsInfo.parallel_sessions_running < this.limit
   }
   async hasAvailableWorkers () {
     const runningWorkers = (await axios.get('/5/workers?status=running&limit=100')).data
